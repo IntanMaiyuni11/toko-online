@@ -1,0 +1,135 @@
+.page-rewards {
+  background: #f6f8fb;
+  padding-top: 110px;
+}
+
+/* ================= POINT CARD ================= */
+
+.points-card {
+  background: linear-gradient(135deg, #28a745, #34ce57);
+  color: white;
+  border-radius: 18px;
+  padding: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  transition: 0.3s;
+}
+
+.points-card:hover {
+  transform: translateY(-6px);
+}
+
+.points-card h2 {
+  font-weight: 700;
+}
+
+.points-icon {
+  font-size: 60px;
+  opacity: 0.9;
+}
+
+.progress {
+  height: 8px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.progress-bar {
+  background: white;
+}
+
+/* ================= REWARD CARD ================= */
+
+.card-reward {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
+}
+
+.card-reward:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.reward-image {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #f8f9fa, #ececec);
+}
+
+.reward-image img {
+  max-width: 80%;
+  transition: 0.3s;
+}
+
+.card-reward:hover img {
+  transform: scale(1.1);
+}
+
+.reward-body {
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.reward-body h5 {
+  font-weight: 700;
+}
+
+.points-large {
+  background: #e9f9ee;
+  color: #28a745;
+  font-weight: 700;
+  border-radius: 50px;
+  padding: 6px 14px;
+  display: inline-block;
+  margin: 12px auto;
+}
+
+/* BUTTON */
+
+.card-reward .btn {
+  border-radius: 50px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.card-reward .btn:active {
+  transform: scale(0.9);
+}
+
+/* LOCKED */
+
+.card-reward.locked {
+  opacity: 0.6;
+}
+
+.card-reward.locked button {
+  background: #aaa !important;
+  border: none;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .points-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .points-icon {
+    font-size: 40px;
+  }
+}
