@@ -1,11 +1,10 @@
 @extends('layouts.admin')
 
 @section('title')
-  Store Settings
+  Admin Product Detail
 @endsection
 
 @section('content')
-<!-- Section Content -->
 <div
   class="section-content section-dashboard-home"
   data-aos="fade-up"
@@ -59,8 +58,8 @@
                       <select name="categories_id" class="form-control">
                         <option value="{{ $item->categories_id }}">{{ $item->category->name }}</option>
                         <option value="" disabled>----------------</option>
-                        @foreach ($categories as $categories)
-                          <option value="{{ $categories->id }}">{{ $categories->name }}</option>
+                        @foreach ($categories as $category)
+                          <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                       </select>
                     </div>
@@ -69,6 +68,13 @@
                     <div class="form-group">
                       <label>Harga</label>
                       <input type="number" class="form-control" name="price" value="{{ $item->price }}" required />
+                    </div>
+                  </div>
+                  {{-- TAMBAHAN FIELD STOK --}}
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Stok</label>
+                      <input type="number" class="form-control" name="stock" value="{{ $item->stock }}" required />
                     </div>
                   </div>
                   <div class="col-md-12">
@@ -96,7 +102,6 @@
   </div>
 </div>
 @endsection
-
 
 @push('addon-script')
   <script src="https://cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>

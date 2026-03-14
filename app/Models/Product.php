@@ -17,7 +17,8 @@ class Product extends Model
         'categories_id', 
         'price', 
         'description', 
-        'slug'
+        'slug',
+        'stock',
     ];
 
     protected $hidden = [];
@@ -46,4 +47,15 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class, 'categories_id', 'id');
     }
+
+    public function reviews()
+{
+    return $this->hasMany(ProductReview::class, 'products_id');
+}
+
+    public function discussions()
+{
+    // Asumsi nama model adalah ProductDiscussion
+    return $this->hasMany(ProductDiscussion::class, 'products_id', 'id');
+}
 }

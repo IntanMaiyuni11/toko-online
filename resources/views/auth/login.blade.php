@@ -1,4 +1,5 @@
 @extends('layouts.auth')
+<link rel="icon" href="{{ asset('images/Logo.png') }}?v=2.2" type="image/png" sizes="32x32">>
 
 @section('content')
 <div class="page-content page-auth">

@@ -10,6 +10,13 @@
     <meta name="author" content="" />
 
     <title>@yield('title')</title>
+    <link rel="icon" href="{{ asset('images/Logo.png') }}?v=2.2" type="image/png" sizes="32x32">
+
+    {{-- Script Midtrans Snap --}}
+    <script 
+        src="https://app.sandbox.midtrans.com/snap/snap.js" 
+        data-client-key="{{ config('services.midtrans.clientKey') }}">
+    </script>
 
      {{-- style --}}
      @stack('prepend-style')

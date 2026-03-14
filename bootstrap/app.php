@@ -13,9 +13,15 @@ return Application::configure(basePath: dirname(__DIR__))
     )
 
     ->withMiddleware(function (Middleware $middleware): void {
+        // Tambahkan baris ini untuk mengecualikan callback Midtrans dari CSRF
+        $middleware->validateCsrfTokens(except: [
+            'api/checkout/callback',
+        ]);
 
         $middleware->alias([
             'is.admin' => \App\Http\Middleware\IsAdmin::class,
+            'is.seller'=> \App\Http\Middleware\IsSeller::class,
+            'seller'=> \App\Http\Middleware\CheckSeller::class,
         ]);
 
     })

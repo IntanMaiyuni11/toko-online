@@ -1,11 +1,10 @@
 @extends('layouts.admin')
 
 @section('title')
-  Store Settings
+  Create New Product
 @endsection
 
 @section('content')
-<!-- Section Content -->
 <div
   class="section-content section-dashboard-home"
   data-aos="fade-up"
@@ -54,8 +53,8 @@
                     <div class="form-group">
                       <label>Kategori Product</label>
                       <select name="categories_id" class="form-control">
-                        @foreach ($categories as $categories)
-                          <option value="{{ $categories->id }}">{{ $categories->name }}</option>
+                        @foreach ($categories as $category)
+                          <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                       </select>
                     </div>
@@ -64,6 +63,13 @@
                     <div class="form-group">
                       <label>Harga</label>
                       <input type="number" class="form-control" name="price" required />
+                    </div>
+                  </div>
+                  {{-- TAMBAHAN FIELD STOK --}}
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Stok</label>
+                      <input type="number" class="form-control" name="stock" placeholder="Contoh: 10" required />
                     </div>
                   </div>
                   <div class="col-md-12">

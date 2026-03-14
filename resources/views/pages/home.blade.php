@@ -111,15 +111,15 @@
                             <a href="{{ route('detail', $product->slug) }}" class="component-products d-block">
                                 <div class="products-thumbnail">
                                     <div
-                                    class="products-image"
-                                    style="
-                                        @if($product->galleries)
-                                            background-image: url('{{ Storage::url($product->galleries->first()->photos) }}');
-                                        @else
-                                            background-color: #eee;
-                                        @endif
-                                    "
-                                    ></div>
+                                class="products-image"
+                                style="
+                                    @if($product->galleries->count())
+                                        background-image: url('{{ Storage::url($product->galleries->first()->photos) }}');
+                                    @else
+                                        background-color: #eee;
+                                    @endif
+                                "
+                            ></div>
                                 </div>
                                 <div class="products-text">
                                     {{  $product->name }}

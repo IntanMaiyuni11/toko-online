@@ -42,22 +42,24 @@ class RegisteredUserController extends Controller
             'is_store_open' => ['required'],
         ]);
 
-        // Create User (Pindahan dari function create)
+        // Create User dengan pembagian Role
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'store_name' => $request->store_name ?? '',
-            'categories_id' => $request->categories_id ?? NULL,
+            'store_name' => $request->is_store_open == 'true' ? $request->store_name : '',
+            'categories_id' => $request->is_store_open == 'true' ? $request->categories_id : NULL,
             'store_status' => $request->is_store_open == 'true' ? 1 : 0,
-            'roles' => 'USER', // Default role
+            // LOGIKA ROLE: Jika buka toko jadi USER, jika tidak jadi CUSTOMER
+            'roles' => $request->is_store_open == 'true' ? 'USER' : 'CUSTOMER',
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        // Redirect ke home sesuai permintaanmu sebelumnya
+        // Tetap menggunakan AppServiceProvider::HOME sesuai permintaan
+        // Pastikan di AppServiceProvider sudah ada: public const HOME = '/dashboard';
         return redirect(AppServiceProvider::HOME);
     }
 

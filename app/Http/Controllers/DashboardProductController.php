@@ -9,17 +9,20 @@ use App\Models\ProductGallery;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\Admin\ProductRequest;
-
+use Illuminate\Support\Facades\Auth;
 class DashboardProductController extends Controller
 {
     public function index()
-    {
-        $products = Product::with(['galleries','category'])->get();
+{
+    // Filter produk agar hanya muncul milik seller yang sedang login
+    $products = Product::with(['galleries','category'])
+                        ->where('users_id', Auth::user()->id)
+                        ->get();
 
-        return view('pages.dashboard-products',[
-            'products' => $products
-        ]);
-    }
+    return view('pages.dashboard-products',[
+        'products' => $products
+    ]);
+}
 
     public function details(Request $request, $id)
     {

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\API\LocationController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\API\VoucherController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +32,6 @@ Route::get('regencies/{provinces_id}', [LocationController::class, 'regencies'])
 // Rute untuk masuk ke dalam Dasboard Midtrans 
 Route::post('/checkout/callback', [CheckoutController::class, 'callback'])
     ->name('midtrans-callback');
+
+// Route untuk cek voucher via AJAX di halaman Cart
+Route::get('check-voucher', [VoucherController::class, 'check']);

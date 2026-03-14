@@ -22,21 +22,31 @@
 
             <div class="row mt-4">
               @foreach ($products as $product)
-              <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                  <a class="card card-dashboard-product d-block" href="{{ route('dashboard-product-details', $product->id) }}">
-                      <div class="card-body">
-                          <div class="product-image-container mb-2">
-                              <img 
-                                  src="{{ $product->galleries->count() ? Storage::url($product->galleries->first()->photos) : 'https://via.placeholder.com/300x200?text=No+Image' }}" 
-                                  alt="{{ $product->name }}" 
-                              />
-                          </div>
-                          <div class="product-title">{{ $product->name }}</div>
-                          <div class="product-category text-muted">{{ $product->category->name }}</div>
-                      </div>
-                  </a>
-              </div>
-              @endforeach
+<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+    <a class="card card-dashboard-product d-block" href="{{ route('dashboard-product-details', $product->id) }}">
+        <div class="card-body">
+            <div class="product-image-container mb-2">
+                <img 
+                    src="{{ $product->galleries->count() ? Storage::url($product->galleries->first()->photos) : 'https://via.placeholder.com/300x200?text=No+Image' }}" 
+                    alt="{{ $product->name }}" 
+                />
+                {{-- BADGE STOK --}}
+                @if($product->stock <= 0)
+                    <span class="badge badge-danger position-absolute" style="top: 10px; right: 10px;">Habis</span>
+                @elseif($product->stock <= 5)
+                    <span class="badge badge-warning position-absolute" style="top: 10px; right: 10px;">Sisa {{ $product->stock }}</span>
+                @else
+                    <span class="badge badge-success position-absolute" style="top: 10px; right: 10px;">Stok: {{ $product->stock }}</span>
+                @endif
+            </div>
+            <div class="product-title">{{ $product->name }}</div>
+            <div class="product-category text-muted">{{ $product->category->name }}</div>
+            {{-- TAMBAHAN HARGA --}}
+            <div class="product-price text-success font-weight-bold">Rp {{ number_format($product->price) }}</div>
+        </div>
+    </a>
+</div>
+@endforeach
           </div>
 
             @if($products->count() == 0)

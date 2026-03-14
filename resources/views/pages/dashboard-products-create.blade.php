@@ -57,6 +57,12 @@
                       </select>
                     </div>
                   </div>
+                  <div class="col-md-6">
+                  <div class="form-group">
+                      <label>Stock</label>
+                      <input type="number" name="stock" class="form-control" required placeholder="Contoh: 10" />
+                  </div>
+              </div>
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>Description</label>

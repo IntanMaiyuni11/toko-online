@@ -18,10 +18,9 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+   public function index(Request $request)
     {
         if ($request->ajax()) {
-            // Eager loading user dan category agar query lebih cepat
             $query = Product::with(['user', 'category']);
 
             return DataTables::of($query)
@@ -50,7 +49,19 @@ class ProductController extends Controller
                             </div>
                         </div>';
                 })
-                ->rawColumns(['action'])
+                // TAMBAHKAN LOGIC STOK DI SINI
+                ->editColumn('stock', function ($item) {
+                    if ($item->stock <= 0) {
+                        return '<span class="badge badge-danger">Habis</span>';
+                    } elseif ($item->stock <= 5) {
+                        return '<span class="badge badge-warning text-dark">' . $item->stock . ' (Limit)</span>';
+                    }
+                    return $item->stock;
+                })
+                ->editColumn('price', function ($item) {
+                    return 'Rp' . number_format($item->price, 0, ',', '.');
+                })
+                ->rawColumns(['action', 'stock']) // Pastikan 'stock' ada di sini agar HTML terbaca
                 ->make(true);
         }
 

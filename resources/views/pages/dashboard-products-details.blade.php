@@ -12,7 +12,7 @@
 >
   <div class="container-fluid">
     <div class="dashboard-heading">
-      <h2 class="dashboard-title">LUMA</h2>
+      <h2 class="dashboard-title">{{ Auth::user()->store_name ?? 'My Store' }}</h2>
       <p class="dashboard-subtitle">
         Product Details
       </p>
@@ -68,6 +68,12 @@
                       </select>
                     </div>
                   </div>
+                  <div class="col-md-6">
+                  <div class="form-group">
+                      <label>Stock</label>
+                      <input type="number" name="stock" class="form-control" value="{{ $product->stock }}" required />
+                  </div>
+              </div>
                   <div class="col-md-12">
                     <div class="form-group">
                       <label>Description</label>

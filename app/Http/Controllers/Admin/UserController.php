@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\User;
 use App\Http\Requests\Admin\UserRequest;
@@ -11,10 +12,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-   public function index()
+    public function index()
     {
         if (request()->ajax()) {
             $query = User::query();
@@ -26,12 +24,10 @@ class UserController extends Controller
                             <div class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle mr-1 mb-1" 
                                     type="button" id="action' .  $item->id . '"
-                                        data-toggle="dropdown" 
-                                        aria-haspopup="true"
-                                        aria-expanded="false">
+                                        data-toggle="dropdown">
                                         Aksi
                                 </button>
-                                <div class="dropdown-menu" aria-labelledby="action' .  $item->id . '">
+                                <div class="dropdown-menu">
                                     <a class="dropdown-item" href="' . route('admin.user.edit', $item->id) . '">
                                         Sunting
                                     </a>
@@ -43,7 +39,7 @@ class UserController extends Controller
                                     </form>
                                 </div>
                             </div>
-                    </div>';
+                        </div>';
                 })
                 ->rawColumns(['action'])
                 ->make();
@@ -52,98 +48,56 @@ class UserController extends Controller
         return view('pages.admin.user.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('pages.admin.user.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(UserRequest $request)
     {
         $data = $request->all();
-
         $data['password'] = bcrypt($request->password);
 
-        User::create($data);
+        if($request->hasFile('photos')) {
+            $data['photos'] = $request->file('photos')->store('assets/user', 'public');
+        }
 
+        User::create($data);
         return redirect()->route('admin.user.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $item = User::findOrFail($id);
-
-        return view('pages.admin.user.edit',[
-            'item' => $item
-        ]);
+        return view('pages.admin.user.edit', compact('item'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(UserRequest $request, $id)
     {
         $data = $request->all();
-
         $item = User::findOrFail($id);
 
-        if($request->password)
-        {
-            $data['password'] =  bcrypt($request->password);
-        }
-        else 
-        {
+        if($request->password) {
+            $data['password'] = bcrypt($request->password);
+        } else {
             unset($data['password']);
         }
 
-        $item->update($data);
+        if($request->hasFile('photos')) {
+            if($item->photos) Storage::disk('public')->delete($item->photos);
+            $data['photos'] = $request->file('photos')->store('assets/user', 'public');
+        }
 
+        $item->update($data);
         return redirect()->route('admin.user.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        $item = User::findorFail($id);
+        $item = User::findOrFail($id);
+        if($item->photos) Storage::disk('public')->delete($item->photos);
         $item->delete();
 
         return redirect()->route('admin.user.index');
-
     }
 }

@@ -19,11 +19,13 @@ class TransactionDetail extends Model
 
     ];
 
+    // PERBAIKAN: Gunakan belongsTo untuk relasi ke tabel induk (Product)
     public function product(){
-        return $this->hasOne( Product::class, 'id', 'products_id' );
+        return $this->belongsTo( Product::class, 'products_id', 'id' );
     }
 
+    // PERBAIKAN: Gunakan belongsTo untuk relasi ke tabel induk (Transaction)
     public function transaction(){
-        return $this->hasOne( Transaction::class, 'id', 'transactions_id' );
+        return $this->belongsTo( Transaction::class, 'transactions_id', 'id' );
     }
 }

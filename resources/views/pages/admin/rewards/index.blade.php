@@ -52,18 +52,19 @@
                 url: '{!! url()->current() !!}',
             },
             columns: [
-                { data: 'id', name: 'id' },
-                { data: 'name', name: 'name' },
-                { data: 'points', name: 'points' },
-                { data: 'discount_amount', name: 'discount_amount' },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false,
-                    width: '15%'
-                },
-            ]
+            { data: 'id', name: 'id' },
+            { data: 'name', name: 'name' },
+            { data: 'points', name: 'points' },
+            // Pastikan ini discount_amount jika di HTML tertulis "Nominal/Tipe Diskon"
+            { data: 'discount_amount', name: 'discount_amount' }, 
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false,
+                width: '15%'
+            },
+]
         });
     </script>
 @endpush

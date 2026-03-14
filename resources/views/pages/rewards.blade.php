@@ -1,139 +1,136 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
-@section('title')
-    Store Rewards Page
-@endsection
+@section('title', 'Rewards System')
+
+@push('addon-style')
+<style>
+    /* Memberikan jarak aman agar tidak tertutup Navbar Fixed */
+    .section-content {
+        margin-top: 40px; 
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(45deg, #2980b9, #3498db);
+    }
+    .bg-primary-light {
+        background-color: rgba(52, 152, 219, 0.1);
+    }
+    .rounded-lg {
+        border-radius: 12px !important;
+    }
+    .card-reward {
+        transition: all 0.3s ease;
+        border: 1px solid #eee;
+    }
+    .card-reward:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important;
+        border-color: #3498db;
+    }
+</style>
+@endpush
 
 @section('content')
-    <div class="page-content page-rewards">
-      <section class="store-rewards">
-        <div class="container">
-          
-          @if(session('success'))
-              <div class="alert alert-success alert-dismissible fade show" role="alert">
-                  {{ session('success') }}
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-          @endif
-          @if(session('error'))
-              <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                  {{ session('error') }}
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-          @endif
-
-          <div class="row">
-            <div class="col-12" data-aos="fade-up">
-              <h4 class="mb-2">Rewards</h4>
-              <p class="text-muted">
-                Kumpulkan poin dari setiap transaksi dan tukarkan dengan hadiah menarik.
-              </p>
+<div class="section-content section-dashboard-home pt-5" data-aos="fade-up">
+    <div class="container-fluid">
+        <div class="dashboard-heading d-flex justify-content-between align-items-center mt-md-3">
+            <div>
+                <h2 class="dashboard-title">Rewards & Promosi</h2>
+                <p class="dashboard-subtitle">Tukarkan poinmu atau kelola voucher untuk tokomu</p>
             </div>
-          </div>
-
-          <div class="row mb-5" data-aos="fade-up">
-            <div class="col-lg-8 mx-auto">
-              <div class="points-card">
-                <div>
-                  <h6>Total Poin Kamu</h6>
-                  <h2>{{ number_format(Auth::user()->points) }} Points</h2>
-
-                  @php
-                    // Logika sederhana untuk progress bar (misal target reward terdekat adalah 5000)
-                    $target = 5000;
-                    $percentage = min((Auth::user()->points / $target) * 100, 100);
-                  @endphp
-
-                  <div class="progress mt-3">
-                    <div class="progress-bar" style="width: {{ $percentage }}%"></div>
-                  </div>
-
-                  @if(Auth::user()->points < $target)
-                    <small>{{ number_format($target - Auth::user()->points) }} poin lagi untuk reward spesial berikutnya 🎁</small>
-                  @else
-                    <small>Kamu hebat! Poinmu sudah melampaui target utama! 🔥</small>
-                  @endif
-                </div>
-
-                <div class="points-icon">
-                  <i class="bi bi-stars"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            @forelse ($rewards as $reward)
-                <div class="col-6 col-md-4 col-lg-3" data-aos="fade-up">
-                    <div class="card-reward {{ Auth::user()->points < $reward->points ? 'locked' : '' }}">
-                        <div class="reward-image">
-                            <img src="{{ $reward->image ?? 'https://img.icons8.com/fluency/240/gift--v1.png' }}" alt="{{ $reward->name }}" />
-                        </div>
-                        <div class="reward-body">
-                            <h5>{{ $reward->name }}</h5>
-                            <p class="points-large">{{ number_format($reward->points) }} Points</p>
-                            
-                            @if(Auth::user()->points >= $reward->points)
-                                <form action="{{ route('rewards-redeem', $reward->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success btn-block" onclick="return confirm('Apakah kamu yakin ingin menukarkan poin untuk {{ $reward->name }}?')">
-                                        Tukarkan
-                                    </button>
-                                </form>
-                            @else
-                                <button class="btn btn-secondary btn-block" disabled>Poin Kurang</button>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <div class="col-12 text-center py-5">
-                    <p>Belum ada reward yang tersedia saat ini.</p>
-                </div>
-            @endforelse
-            </div>
-
-          <div class="row mt-5">
-            <div class="col-12" data-aos="fade-up">
-                <h5 class="mb-3">Riwayat Poin</h5>
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-borderless">
-                                <thead>
-                                    <tr class="text-muted">
-                                        <th>Tanggal</th>
-                                        <th>Keterangan</th>
-                                        <th>Jumlah Poin</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse(Auth::user()->pointHistories as $history)
-                                    <tr>
-                                        <td>{{ $history->created_at->format('d M Y, H:i') }}</td>
-                                        <td>{{ $history->description }}</td>
-                                        <td class="{{ $history->amount > 0 ? 'text-success' : 'text-danger' }}">
-                                            {{ $history->amount > 0 ? '+' : '' }}{{ number_format($history->amount) }}
-                                        </td>
-                                    </tr>
-                                    @empty
-                                    <tr>
-                                        <td colspan="3" class="text-center text-muted py-3">Belum ada riwayat poin.</td>
-                                    </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-          </div>
-          </div>
+            @if(Auth::user()->roles == 'USER')
+                <a href="{{ route('dashboard-rewards-create') }}" class="btn btn-success px-4 shadow-sm">
+                    + Tambah Reward Toko
+                </a>
+            @endif
         </div>
-      </section>
+
+        <div class="dashboard-content mt-4">
+            <div class="row">
+                {{-- Daftar Voucher --}}
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="mb-4 font-weight-bold">Daftar Voucher Tersedia</h5>
+                            <div class="row">
+                                @foreach($rewards as $reward)
+                                <div class="col-md-6 mb-4">
+                                    <div class="card h-100 rounded-lg shadow-none card-reward">
+                                        <div class="card-body p-3">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="p-2 bg-primary-light rounded mr-3 text-primary">
+                                                    <i class="fas fa-ticket-alt"></i>
+                                                </div>
+                                                <div class="overflow-hidden">
+                                                    <h6 class="mb-0 font-weight-bold text-truncate">{{ $reward->name }}</h6>
+                                                    <small class="text-muted font-weight-bold">{{ number_format($reward->points) }} Pts</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                                {{-- Semua User bisa tukar --}}
+                                                <form action="{{ route('rewards-redeem', $reward->id) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm btn-outline-primary px-3 rounded-pill" 
+                                                        {{ Auth::user()->points < $reward->points ? 'disabled' : '' }}>
+                                                        <i class="fas fa-shopping-cart mr-1"></i> Tukar
+                                                    </button>
+                                                </form>
+
+                                                {{-- Tombol Edit tetap ada tanpa label 'Milik Saya' --}}
+                                                @if(Auth::user()->roles == 'USER' && Auth::user()->id == $reward->users_id)
+                                                    <a href="{{ route('dashboard-rewards-edit', $reward->id) }}" class="btn btn-sm btn-info rounded-pill px-3">
+                                                        <i class="fas fa-edit mr-1"></i> Edit
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Sidebar Info Poin --}}
+                <div class="col-md-4">
+                    <div class="card bg-gradient-primary text-white border-0 shadow-sm mb-4">
+                        <div class="card-body py-4 text-center">
+                            <p class="mb-1 opacity-75 small">Saldo Poin Anda</p>
+                            <h2 class="font-weight-bold mb-0">
+                                <i class="fas fa-coins mr-2"></i>{{ number_format(Auth::user()->points) }}
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h6 class="mb-3 font-weight-bold">Riwayat Aktivitas</h6>
+                            <div class="list-group list-group-flush">
+                                @forelse($histories as $history)
+                                <div class="list-group-item px-0 border-0">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div style="max-width: 75%;">
+                                            <p class="mb-0 small font-weight-bold text-dark text-truncate">{{ $history->description }}</p>
+                                            <small class="text-muted" style="font-size: 10px;">{{ $history->created_at->diffForHumans() }}</small>
+                                        </div>
+                                        <span class="{{ $history->amount < 0 ? 'text-danger' : 'text-success' }} font-weight-bold small">
+                                            {{ $history->amount < 0 ? '' : '+' }}{{ number_format($history->amount) }}
+                                        </span>
+                                    </div>
+                                </div>
+                                @empty
+                                <div class="text-center py-4 text-muted small">
+                                    Belum ada aktivitas
+                                </div>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 @endsection

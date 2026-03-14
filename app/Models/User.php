@@ -20,7 +20,8 @@ class User extends Authenticatable
     protected $fillable = [
        'name', 
        'email', 
-       'password', 
+       'password',
+       'photos', 
        'points',
        'roles', 
        'store_name',
@@ -32,7 +33,8 @@ class User extends Authenticatable
         'regencies_id', 
         'zip_code', 
         'country', 
-        'phone_number'
+        'phone_number',
+        'is_jt', 'is_sicepat', 'is_pos'
     ];
 
 
@@ -66,5 +68,27 @@ class User extends Authenticatable
 
     public function pointHistories() {
     return $this->hasMany(PointHistory::class, 'users_id', 'id')->latest();
+}
+
+    public function sentMessages() {
+    return $this->hasMany(Message::class, 'sender_id');
+}
+
+    public function receivedMessages() {
+    return $this->hasMany(Message::class, 'receiver_id');
+}
+    public function isCustomer()
+{
+    return $this->roles === 'CUSTOMER';
+}
+
+    public function isSeller()
+{
+    return $this->roles === 'USER';
+}
+
+    public function isAdmin()
+{
+    return $this->roles === 'ADMIN';
 }
 }
