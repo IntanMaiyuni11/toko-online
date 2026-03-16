@@ -149,3 +149,20 @@
 @endforeach
 
 @endsection
+
+@push('addon-script')
+<script>
+    $(document).ready(function() {
+        // Solusi utama: Pindahkan modal ke body agar tidak terhalang backdrop CSS
+        $('.modal').appendTo("body");
+
+        // Memastikan urutan tumpukan (z-index) benar saat modal muncul
+        $('.modal').on('show.bs.modal', function () {
+            $(this).css('z-index', 1060);
+            setTimeout(function() {
+                $('.modal-backdrop').not('.modal-stack').css('z-index', 1059).addClass('modal-stack');
+            }, 0);
+        });
+    });
+</script>
+@endpush

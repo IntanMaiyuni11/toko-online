@@ -41,30 +41,34 @@
                 <ul class="navbar-nav d-none d-lg-flex">
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link" id="navbarDropdown" role="button" data-toggle="dropdown">
-                            <img src="{{ Auth::user()->photos ? Storage::url(Auth::user()->photos) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=0D8ABC&color=fff' }}" 
-                                alt="" 
-                                class="rounded-circle mr-2 profile-picture" 
-                                style="width: 45px; height: 45px; object-fit: cover;" />
-                            Hi, {{ Auth::user()->name }}
+                           <img src="{{ Auth::user()->photos ? asset('storage/' . Auth::user()->photos) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=0D8ABC&color=fff' }}" 
+                         alt="" 
+                         class="rounded-circle mr-2 profile-picture" 
+                         style="width: 45px; height: 45px; object-fit: cover;" />
+                          Hi, {{ Auth::user()->name }}
                         </a>
                         <div class="dropdown-menu">
+                        @if (Auth::user()->roles == 'ADMIN')
+                            {{-- MENU KHUSUS ADMIN --}}
+                            <a href="{{ route('admin.dashboard') }}" class="dropdown-item">Dashboard Admin</a>
+                        @else
+                            {{-- MENU KHUSUS USER / CUSTOMER --}}
                             <a href="{{ route('dashboard') }}" class="dropdown-item">Dashboard</a>
-                            
-                            {{-- MENU VOUCHER SAYA --}}
                             <a href="{{ route('dashboard-vouchers') }}" class="dropdown-item">Voucher Saya</a>
-                            
                             <a href="{{ route('dashboard-settings-account') }}" class="dropdown-item">Settings</a>
-                            
-                            <div class="dropdown-divider"></div>
-                            
-                            <a class="dropdown-item" href="{{ route('logout') }}"
-                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                               Logout
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                        </div>
+                        @endif
+
+                        <div class="dropdown-divider"></div>
+
+                        {{-- LOGOUT (Muncul untuk keduanya) --}}
+                        <a class="dropdown-item" href="{{ route('logout') }}"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                           Logout
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    </div>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('cart') }}" class="nav-link d-inline-block mt-2">
